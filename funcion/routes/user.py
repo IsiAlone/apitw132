@@ -1,41 +1,14 @@
 from fastapi import APIRouter
 from config.db import conn
 from models.user import tweets
+from twitterapi import client
 from schemas.tweet import Tweet
+import datetime
 from datetime import date
 
 
 user = APIRouter()
 
-query = 'from:elmundoes ucrania'
-
-tweets_list=[]
-tweets_7=client.search_recent_tweets(query=query, tweet_fields=['created_at'], expansions= 'author_id', max_results=10)
-tweets_list.append(tweets_7)
-for t in tweets_7.data:
-    dates=t['created_at']
-    datess=datetime.datetime.date(dates)
-    print(datess)
-
-@user.get('/{cuenta}&{clave}')
-def get_results(date:date, cuenta:str, clave:str, resultados: int):
-    tweets = client.search_recent_tweets(query=clave, tweet_fields=['created_at'],  expansions= 'author_id', max_results=resultados)
-    fecha,tw_id,tw_content=[],[],[]
-    for f in tweets.data: #f:fecha, t:tw_id tx:tw_contexnt
-        dates=datetime.datetime.date(f['created_at'])
-        fecha.append(str(dates))
-    for t in tweets.data:
-        id=t['id']
-        tw_id.append(str(id))
-    for tx in tweets.data:
-        text=tx['text']
-        tw_content.append(str(text))
-    account=[cuenta]*resultados
-    keyword=[clave]*resultados
-    
-    
-    
-        
 
 @user.get('/tweet/{tw_id}') #devuelve un tweet con una de la base de datos id
 def get_tweet(tw_id: str):
@@ -58,12 +31,45 @@ def get_tweet_fecha(fecha: date):
 def get_tweets(): 
     return conn.execute(tweets.select()).fetchall()
 
+@user.get('/{query}')
+def get_res_query(query: str):
+    return conn.execute(tweets.select().where(tweets.c.clave == query)).fetchall()
+
 
 @user.post('/tweets')
 def add_tweet(tweet: Tweet):
     new_tweet = {'fecha':tweet.fecha, 'cuenta':tweet.cuenta, 'clave':tweet.clave, 'tw_id':tweet.tw_id, 'tw_content':tweet.tw_content}
     conn.execute(tweets.insert().values(new_tweet)) 
     return f'El tweet {tweet.tw_id} se ha guardado correctamente'
+
+
+@user.post('/{query}')
+def get_results(clave:str):
+    query_results = client.search_recent_tweets(query=clave, tweet_fields=['created_at'], expansions= 'author_id', max_results=10)
+    content_to_add=[]
+
+    for f in query_results.data:
+        content_dict={}
+
+        dates=datetime.datetime.date(f['created_at'])
+        content_dict['fecha']=str(dates)
+        
+        author=(f['author_id'])
+        content_dict['cuenta']=str(author)
+
+        content_dict['clave']=clave
+        
+        id=f['id']
+        content_dict['tw_id']=str(id)
+
+        text=f['text']
+        content_dict['tw_content']=str(text)
+        content_to_add.append(content_dict)
+        
+    conn.execute(tweets.insert(), content_to_add)
+
+    #añadir a la base de datos
+    return 'base de datos actualizada con nuevos mensajes'
 
 
 @user.delete('/tweet/{tw_id}')
