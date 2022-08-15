@@ -1,0 +1,5 @@
+api_k = 'KQ1Ohmteriet7sF2oXdpOCo6x'
+api_k_secret = 'IgsLNXoyn4Lu6TlDCm3j3H4d3GESDRMU2E9orjjO6SYqJ59FI9'
+access_t = '1557664088997724161-b6y7lqeBJu3ovaGuaRhG7PsjlGIqcl'
+access_t_secret = '55oWKV2xHY93H2NWUhlLjmu5dGPuzOxJty9yJUmIpUwLJ'
+bearer_t = 'AAAAAAAAAAAAAAAAAAAAAFdjfwEAAAAAIalVGy0XppRILKOlqCV0CkTIbyA%3D0PQHaJJqANt7ikPeXYUDQQujanpBdHyloFqZHnTws0QOyRkfNM'
