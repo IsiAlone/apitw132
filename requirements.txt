@@ -1,4 +1,6 @@
 tweepy
+fastapi
+uvicorn
 sqlalchemy
 pydantic
 twitterapi
