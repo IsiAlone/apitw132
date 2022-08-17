@@ -1,8 +1,9 @@
 from pydantic import BaseModel
-from datetime import date
 
+
+# Modelo base para la creacion de un tweet
 class Tweet(BaseModel):
-    fecha: date
+    fecha: str
     cuenta: str
     clave: str
     tw_id: str

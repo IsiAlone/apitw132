@@ -1,0 +1,19 @@
+site_name: APITW132
+site_url: https://site_url
+repo_url: https://repo_url
+repo_name: repo_name
+
+theme:
+  name: material
+  
+nav:
+    - Home: 'README.md'
+    - About: 'about.md'
+    - Guide: 'guide.md'
+    - Code:
+      - API: code/user.md
+
+plugins:
+  - mkdocstrings
+
+#Debes cambiar el puerto ya que por defecto fastapi va a coger lh:8000, para ello mkdocs serve -a localhost:8001

@@ -1,0 +1,4 @@
+tweepy
+sqlalchemy
+pydantic
+twitterapi
